@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <title>News Recommendation System Demo
+  </title>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+      body {
+        font-family: monospace;
+      }
+      h1 {
+        background-color: yellow;
+        display: inline-block;
+        font-size: 3em;
+        margin: 0;
+        padding: 14px;
+      }
+      h3 {
+        color: black;
+        font-size: 20px;
+        margin-top: 3px;
+        text-align: center;
+      }
+      button {
+        margin: 0 auto;
+      }
+      #chatbox {
+        margin-left: auto;
+        margin-right: auto;
+        width: 40%;
+        margin-top: 60px;
+      }
+      #userInput {
+        margin-left: auto;
+        margin-right: auto;
+        width: 40%;
+        margin-top: 60px;
+      }
+      .userInput {
+        margin-left: auto;
+        margin-right: auto;
+        width: 80%;
+        /* margin-top: 10px; */
+      }
+      #textInput {
+        width: 90%;
+        border: none;
+        border-bottom: 3px solid black;
+        font-family: monospace;
+        font-size: 17px;
+      }
+      .userText {
+        color: white;
+        font-family: monospace;
+        font-size: 17px;
+        text-align: right;
+        line-height: 30px;
+      }
+      .userText span {
+        background-color: #808080;
+        padding: 10px;
+        border-radius: 2px;
+      }
+      .botText {
+        color: white;
+        font-family: monospace;
+        font-size: 17px;
+        text-align: left;
+        line-height: 30px;
+      }
+      .botText span {
+        background-color: #4169e1;
+        padding: 10px;
+        border-radius: 2px;
+      }
+      #tidbit {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 300px;
+      }
+      .boxed {
+        margin-left: auto;
+        margin-right: auto;
+        width: 78%;
+        margin-top: 30px;
+        border: 1px solid green;
+      }
+      .bb{
+        margin-left: auto;
+        margin-right: auto;
+        width: 78%;
+        border: 1px solid green;
+        display: flex;
+      }
+      .boxed2 {
+        width: 49%;
+        height: 400px;
+        border: 1px solid green;
+      }
+      .box {
+        border: 2px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <img />
+    <center>
+      <h1>
+        News Recommendation System Demo
+      </h1>
+    </center>
+    <div class="box"></div>
+    <script>
+      function getRes() {
+        var userId = $("#textInput").val();
+        var date =  $("#myDate").val();
+
+        $.get("/getHistory", { userId: userId, date: date}).done(function(data) {
+          $("#history").empty();
+          $.each(JSON.parse(data), function(index, element) {
+            $('#history').append(
+              `
+            <div class="userInput">` + element.id + ` ` + element.title + `
+            <br/>(` +
+            element.category + ` / ` + element.subcategory + `)     ` + element.date + `<br/>
+            </div>`);
+          });
+        });
+
+        $.get("/getResults", { userId: userId, date: date}).done(function(data) {
+          $("#result").empty();
+          $.each(JSON.parse(data), function(index, element) {
+            $('#result').append(
+              `
+            <div class="userInput">` + element.id + ` ` + element.title + `
+            <br/>(` +
+            element.category + ` / ` + element.subcategory + `)     ` + element.date + `<br/>
+            </div>`);
+          });
+        });
+      }
+    </script>
+    <div class="boxed">
+      <div>
+        <div id="userInput">
+          UserId <input id="textInput" type="text" name="msg" placeholder="user id" />
+        </div>
+        <div id="userInput">
+          Date (Imagine that today is ...) <input type="date" id="myDate" min="2018-01-06" max="2019-12-06">
+          <div>
+           
+          </div>
+        </div>
+        <div id="userInput">
+          <button onclick="getRes()">Recommend</button>
+        </div>
+        
+      </div>
+    </div>
+    <div class="bb">
+      <div class="boxed2">
+        <div>
+          <div style="font-size: large;"> Recommended Results </div>
+          <div id="result"></div>
+        </div>
+      </div>
+      <div class="boxed2">
+        <div>
+          <div style="font-size: large;"> User Recent History </div>
+          <div id="history"></div>
+          <!-- <div class="userInput">
+            1 The Brands Queen Elizabeth, Prince Charles, and Prince Philip Swear By<br/>
+            (lifestyle / lifestyleroyals)     2019-09-02
+          </div>
+          <div class="userInput">
+            1 The Brands Queen Elizabeth, Prince Charles, and Prince Philip Swear By<br/>
+            (lifestyle / lifestyleroyals)     2019-09-02
+          </div>
+          <div class="userInput">
+            1 The Brands Queen Elizabeth, Prince Charles, and Prince Philip Swear By<br/>
+            (lifestyle / lifestyleroyals)     2019-09-02
+          </div>
+          <div class="userInput">
+            1 The Brands Queen Elizabeth, Prince Charles, and Prince Philip Swear By<br/>
+            (lifestyle / lifestyleroyals)     2019-09-02
+          </div>
+          <div class="userInput">
+            ......
+          </div> -->
+          
+        </div>
+      </div>
+    </div>
+    
+  </body>
+</html>
