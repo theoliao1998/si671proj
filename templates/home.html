@@ -112,6 +112,14 @@
     </center>
     <div class="box"></div>
     <script>
+      function recordClick(obj){
+        let thisObj = $(obj);
+        let userId = thisObj.attr("userId");
+        let newsId = thisObj.attr("newsId");
+        console.log(userId + newsId);
+        $.get("/click", { userId: userId, newsId: newsId});
+      }
+
       function getRes() {
         var userId = $("#textInput").val();
         var date =  $("#myDate").val();
@@ -121,7 +129,7 @@
           $.each(JSON.parse(data), function(index, element) {
             $('#history').append(
               `
-            <div class="userInput">` + element.id + ` ` + element.title + `
+            <div class="userInput">` + element.id + ` <a href="` + element.url + `" target="_blank">` + element.title + `</a>
             <br/>(` +
             element.category + ` / ` + element.subcategory + `)     ` + element.date + `<br/>
             </div>`);
@@ -133,7 +141,7 @@
           $.each(JSON.parse(data), function(index, element) {
             $('#result').append(
               `
-            <div class="userInput">` + element.id + ` ` + element.title + `
+            <div class="userInput">` + element.id + ` <a newsId="`+element.newsId+`" userId="`+userId+`" href="` + element.url + `" target="_blank" onclick="recordClick(this)">` + element.title + `</a>
             <br/>(` +
             element.category + ` / ` + element.subcategory + `)     ` + element.date + `<br/>
             </div>`);

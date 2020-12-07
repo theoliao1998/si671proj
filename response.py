@@ -22,7 +22,7 @@ def query(statement):
     return res
 
 def get_candidates(date):
-    return query("select n.NewsId, n.Category, n.`Sub-category`, n.title, n.Time, (select count(1) from history as h where h.newsId = n.NewsId) as cnt  from news as n where n.Time = '" + date + "'")
+    return query("select n.NewsId, n.Category, n.`Sub-category`, n.title, n.Time, n.URL, (select count(1) from history as h where h.newsId = n.NewsId) as cnt  from news as n where n.Time = '" + date + "'")
 
 def get_score(userId,category,subcategory,date):
     if (userId,category,subcategory) in cache:
@@ -152,7 +152,7 @@ def get_response(userId,date):
             for x in sorted(l,key=lambda x:x[-1],reverse=True): 
                 res.append(x)
                 cnt += 1
-                if cnt >= 5:
+                if cnt >= num:
                     break
 
     return res

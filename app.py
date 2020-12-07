@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, make_response
 from json import dumps
 
 from response import get_response
-from history import get_history
+from history import get_history, add_click
 
 app = Flask(__name__)
 
@@ -19,7 +19,7 @@ def getHistoryResp():
     histories = get_history(userId,date)
     if len(histories)  > 5:
         histories = histories[:5]
-    res = [{'id': str(i + 1), 'title': h[3], 'category': h[1], 'subcategory': h[2], 'date': h[4]} for i,h in enumerate(histories)]
+    res = [{'id': str(i + 1), 'title': h[3], 'category': h[1], 'subcategory': h[2], 'date': h[4], 'url': h[5]} for i,h in enumerate(histories)]
     return make_response(dumps(res))
 
 @app.route("/getResults")
@@ -29,8 +29,15 @@ def getResultsResp():
 
     responses = get_response(userId,date)
     
-    res = [{'id': str(i + 1), 'title': h[3], 'category': h[1], 'subcategory': h[2], 'date': h[4]} for i,h in enumerate(responses)]
+    res = [{'id': str(i + 1), 'title': h[3], 'category': h[1], 'subcategory': h[2], 'date': h[4], 'url': h[5], 'newsId': h[0]} for i,h in enumerate(responses)]
     return make_response(dumps(res))
+
+@app.route("/click")
+def recordClicks():
+    userId = request.args.get('userId')
+    newsId = request.args.get('newsId')
+    add_click(userId,newsId)
+    return make_response(dumps({}))
 
 if __name__ == "__main__":
 
